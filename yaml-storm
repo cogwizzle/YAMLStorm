@@ -1,0 +1,75 @@
+#!/Library/Frameworks/Python.framework/Versions/3.12/bin/python3
+# This script reads YAML files and converts them into CURL requests.
+# 
+# Usage:
+# yaml-storm <yaml_file>
+#
+import os
+import sys
+import yaml
+import requests
+
+def help():
+    sys.stderr.write("yaml-storm: A simple YAML to CURL converter\n")
+    sys.stderr.write("Usage: yaml-storm <yaml_file>\n")
+    sys.stderr.write("This script reads YAML files and converts them into CURL requests.\n")
+    sys.stderr.write("Example:\n")
+    sys.stderr.write("example.yml\n")
+    sys.stderr.write("```yaml\n")
+    sys.stderr.write("url: \"https://example.com\"\n")
+    sys.stderr.write("method: \"GET\"\n")
+    sys.stderr.write("headers:\n")
+    sys.stderr.write("  Content-Type: 'application/json'\n")
+    sys.stderr.write("data:\n")
+    sys.stderr.write("  name: \"John Doe\"\n")
+    sys.stderr.write("  age: 30\n")
+    sys.exit(1)
+
+def validateArguments():
+    if len(sys.argv) != 2:
+        return False
+    return True
+
+# Substitute all variables in a file with their environment variable values
+# Format of the variables is {{var_name}}.
+def substituteVariables(file_path):
+    with open(file_path, 'r') as file:
+        data = file.read()
+    for var in os.environ:
+        data = data.replace(f'{{{{{var}}}}}', os.environ[var])
+    return data
+
+def main():
+    isDebug = os.getenv('DEBUG')
+    if not validateArguments():
+        help()
+        sys.exit(1)
+
+    yaml_file = sys.argv[1]
+
+    cwd = os.getcwd()
+    file_path = os.path.join(cwd, yaml_file)
+
+    raw_content = substituteVariables(file_path)
+    data = yaml.safe_load(raw_content)
+
+    # Extract URL, method, headers, and data
+    url = data.get('url')
+    method = data.get('method', 'GET').upper()
+    headers = data.get('headers', [])
+    data = data.get('data', {})
+
+    if isDebug:
+        sys.stderr.write(f"URL: {url}\n")
+        sys.stderr.write(f"Method: {method}\n")
+        sys.stderr.write(f"Headers: {headers}\n")
+        sys.stderr.write(f"Data: {data}\n")
+
+    # Make the request
+    response = requests.request(method, url, headers=headers, json=data)
+    
+    # Print the response
+    sys.stderr.write(f"Response from {url}:\n")
+    print(response.text)
+
+main()

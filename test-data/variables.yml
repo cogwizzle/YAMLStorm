@@ -1,0 +1,7 @@
+url: 'https://webhook.site/745f3438-9659-433f-8d2d-af9db9160d12'
+method: 'GET'
+headers:
+  Content-Type: 'application/json'
+data:
+  name: '{{NAME}}'
+  age: {{AGE}}
