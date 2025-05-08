@@ -8,8 +8,8 @@ make install
 
 # Simple usage:
 Create a YAML file with the following structure:
-```yaml
-example.yml
+
+__example.yml__
 ```yaml
 url: "https://example.com"
 method: "GET"
