@@ -42,5 +42,5 @@ data:
 
 Then run the following command:
 ```bash
-TOKEN="<your_token>" NAME="John Doe" AGE=30; yaml-storm example.yml
+TOKEN="<your_token>" NAME="John Doe" AGE=30 yaml-storm example.yml
 ```
