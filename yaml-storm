@@ -119,7 +119,7 @@ def main():
     try:
         response = requests.request(method, url, headers=headers, json=data)
     except requests.RequestException as error:
-        # Handle error contains "Failed to resolve"
+        # Handle error that contains "Failed to resolve"
         if "Failed to resolve" in str(error):
             sys.stderr.write(f"Error making request to {url}. Please check the URL and your network connection.\n")
             sys.stderr.write(f"Error: {error}\n")
