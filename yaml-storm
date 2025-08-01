@@ -116,7 +116,16 @@ def main():
         sys.stderr.write(f"Data: {data}\n")
 
     # Make the request
-    response = requests.request(method, url, headers=headers, json=data)
+    try:
+        response = requests.request(method, url, headers=headers, json=data)
+    except requests.RequestException as error:
+        # Handle error contains "Failed to resolve"
+        if "Failed to resolve" in str(error):
+            sys.stderr.write(f"Error making request to {url}. Please check the URL and your network connection.\n")
+            sys.stderr.write(f"Error: {error}\n")
+        else:
+            sys.stderr.write(f"Error making request: {error}\n")
+        sys.exit(1)
     
     # Print the response
     sys.stderr.write(f"Response from {url}:\n")
