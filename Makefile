@@ -5,7 +5,7 @@ install:
 	@echo "Installing dependencies..."
 	@pip3 install -r requirements.txt
 	@echo "Dependencies installed successfully."
-	sudo cp ./yaml-storm ${bin}/yaml-storm
+	@sudo cp ./yaml-storm ${bin}/yaml-storm
 
 .PHONY: test
 test:
