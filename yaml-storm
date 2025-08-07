@@ -4,10 +4,11 @@
 # Usage:
 # yaml-storm <yaml_file>
 # yaml-storm generate <folder>
+import curlify
 import os
+import requests
 import sys
 import yaml
-import requests
 
 template = '''url: "https://example.com"
 method: "GET"
@@ -81,6 +82,22 @@ def generateMakefile(folder):
         file.write(makefile_template)
     sys.stderr.write(f"Makefile created at {filename}\n")
 
+# Using curlify to generate a curl command from the YAML file
+def generateCurlCommand(yaml_file):
+    cwd = os.getcwd()
+    file_path = os.path.join(cwd, yaml_file)
+
+    raw_content = substituteVariables(file_path)
+    data = yaml.safe_load(raw_content)
+    
+    url = data.get('url')
+    method = data.get('method', 'GET').upper()
+    headers = data.get('headers', {})
+    data = data.get('data', {})
+
+    response = requests.request(method, url, headers=headers, json=data)
+    return curlify.to_curl(response.request)
+  
 def main():
     isDebug = os.getenv('DEBUG')
     if not validateArguments():
@@ -93,6 +110,14 @@ def main():
         os.makedirs(folder, exist_ok=False)
         generateYaml(folder)
         generateMakefile(folder)
+        sys.exit(0)
+    if sys.argv[1] == 'curl':
+        if len(sys.argv) < 3:
+            sys.stderr.write("Error: Please provide a YAML file to convert to CURL.\n")
+            sys.exit(1)
+        yaml_file = sys.argv[2]
+        curl_command = generateCurlCommand(yaml_file)
+        print(curl_command)
         sys.exit(0)
 
     yaml_file = sys.argv[1]
