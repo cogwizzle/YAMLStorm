@@ -44,3 +44,9 @@ Then run the following command:
 ```bash
 TOKEN="<your_token>" NAME="John Doe" AGE=30 yaml-storm example.yml
 ```
+
+## Curl export
+You can export the request to a curl command by using the curl flag.
+```bash
+TOKEN="<your_token>" NAME="John Doe" AGE=30 yaml-storm curl example.yml
+```
