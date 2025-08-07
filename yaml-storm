@@ -44,6 +44,9 @@ def help():
     sys.stderr.write("To generate a YAML file template, use:\n")
     sys.stderr.write("yaml-storm generate <folder>\n")
     sys.stderr.write("This will create a folder with a request.yaml file and a Makefile.\n")
+    sys.stderr.write("```\n")
+    sys.stderr.write("Generate curl command from YAML file:\n")
+    sys.stderr.write("<vars> yaml-storm curl <file>\n")
     sys.exit(1)
 
 def validateArguments():
